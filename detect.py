@@ -8,7 +8,7 @@ from sklearn.naive_bayes import MultinomialNB
 # secondary detect method
 from langdetect import detect
 
-# offline dataset
+# local dataset
 here = os.path.dirname(os.path.abspath(__file__))
 filename = os.path.join(here, 'dataset.csv')
 data = pd.read_csv(filename)
