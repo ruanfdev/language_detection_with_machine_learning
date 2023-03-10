@@ -1,4 +1,5 @@
 # import the necessary Python libraries and the dataset
+import os
 import pandas as pd
 import numpy as np
 from sklearn.feature_extraction.text import CountVectorizer
@@ -7,9 +8,12 @@ from sklearn.naive_bayes import MultinomialNB
 # secondary detect method
 from langdetect import detect
 
-# online dataset (offline dataset saved in same directory)
-data = pd.read_csv(
-    "https://raw.githubusercontent.com/amankharwal/Website-data/master/dataset.csv")
+# offline dataset
+here = os.path.dirname(os.path.abspath(__file__))
+filename = os.path.join(here, 'dataset.csv')
+data = pd.read_csv(filename)
+# online dataset
+# data = pd.read_csv(https://raw.githubusercontent.com/amankharwal/Website-data/master/dataset.csv")
 # print(data.head())
 
 # check if dataset contains any null values
