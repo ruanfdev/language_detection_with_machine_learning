@@ -14,10 +14,6 @@ filename = os.path.join(here, 'dataset.csv')
 data = pd.read_csv(filename)
 # online dataset
 # data = pd.read_csv(https://raw.githubusercontent.com/amankharwal/Website-data/master/dataset.csv")
-# print(data.head())
-
-# check if dataset contains any null values
-# print(data.isnull().sum())
 
 # languages present in this dataset
 # print(data["language"].value_counts())
@@ -36,8 +32,8 @@ model.fit(X_train, y_train)
 model.score(X_test, y_test)
 
 # check accuracy score of dataset
-# print(model.fit(X_train, y_train))
-# print(model.score(X_test, y_test))
+print('Accuracy with current dataset: ', round(
+    model.score(X_test, y_test) * 100, 1), '%')
 
 # detect the language of a text by taking a user input
 user = input("Enter a Text: ")
