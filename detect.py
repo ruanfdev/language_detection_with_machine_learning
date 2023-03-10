@@ -1,38 +1,46 @@
-from langdetect import detect
-from sklearn.svm import LinearSVC
-from sklearn.model_selection import train_test_split
-from sklearn.feature_extraction.text import TfidfVectorizer
+# import the necessary Python libraries and the dataset
 import pandas as pd
+import numpy as np
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import MultinomialNB
+# secondary detect method
+from langdetect import detect
 
-# Load the data from the CSV file
-df = pd.read_csv(
-    'https://raw.githubusercontent.com/amankharwal/Website-data/master/dataset.csv', names=['text', 'lang'])
+# online dataset (offline dataset saved in same directory)
+data = pd.read_csv(
+    "https://raw.githubusercontent.com/amankharwal/Website-data/master/dataset.csv")
+# print(data.head())
 
-# Split the data into training and testing sets
-train_data, test_data = train_test_split(df, test_size=0.2, random_state=42)
+# check if dataset contains any null values
+# print(data.isnull().sum())
 
-# Extract features from the text using the TF-IDF vectorizer
-vectorizer = TfidfVectorizer()
-train_features = vectorizer.fit_transform(train_data['text'])
-train_labels = train_data['lang']
+# languages present in this dataset
+# print(data["language"].value_counts())
 
-# Train a linear support vector classifier on the training data
-classifier = LinearSVC()
-classifier.fit(train_features, train_labels)
+# split the data into training and test sets
+x = np.array(data["Text"])
+y = np.array(data["language"])
+cv = CountVectorizer()
+X = cv.fit_transform(x)
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.33, random_state=42)
 
-# Evaluate the classifier on the test data
-test_features = vectorizer.transform(test_data['text'])
-test_labels = test_data['lang']
-accuracy = classifier.score(test_features, test_labels)
-print(f'Accuracy: {accuracy}')
+# train the language detection model on multiclass classification
+model = MultinomialNB()
+model.fit(X_train, y_train)
+model.score(X_test, y_test)
 
-# Use the classifier to detect the language of a given text
-text = input("Enter text to identify:")
-text_features = vectorizer.transform([text])
-predicted_lang = classifier.predict(text_features)[0]
-print(f'The language of "{text}" is {predicted_lang}')
+# check accuracy score of dataset
+# print(model.fit(X_train, y_train))
+# print(model.score(X_test, y_test))
 
-# Use the langdetect library to verify the result
-langdetect_lang = detect(text)
-print(
-    f'The language of "{text}" according to langdetect is {langdetect_lang}')
+# detect the language of a text by taking a user input
+user = input("Enter a Text: ")
+data = cv.transform([user]).toarray()
+output = model.predict(data)
+print(output)
+
+# Use the langdetect library to detect the language (secondary detect method)
+langdetect_lang = detect(user)
+print(f'{langdetect_lang}')
